@@ -1,8 +1,9 @@
+require('dotenv').config();
 const express=require('express')
 const http=require('http')
 const {Server}=require('socket.io')
 const path=require('path')
-
+const PORT = process.env.PORT || 1001;
 const app=express()
 const server=http.createServer(app);
 const io=new Server(server);
@@ -23,6 +24,6 @@ app.get('/',(req,res)=>{
     return res.sendFile('/public/index.html')
 })
 
-server.listen(1001, ()=>console.log('server running fine!'));
+server.listen(PORT, ()=>console.log('server running fine!'));
 
 
