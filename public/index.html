@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+        body{
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+        #form{
+            background-color: rgba(0, 0, 0, 0.15);
+            padding: 0.25rem;
+            position: fixed;
+            display: flex;
+            height: 3rem;
+            box-sizing: border-box;
+            backdrop-filter: blur(10px);
+            bottom: 0; left: 0; right: 0;
+
+        }
+        #chat{
+            border: none;
+            padding: 0 1rem;
+            flex-grow: 1;
+            border-radius: 10px; 
+            margin: 0.25rem;
+        }
+        #chat:focus { outline: none; }
+        button{
+            background-color: #4d96ae;
+            border: none;
+            border-radius: 10px;
+            padding: 0 1rem;
+            margin: 0.25rem;
+            outline: none; 
+            /* color: #fff;  */
+        }
+        #msgs{
+            list-style-type: none; margin: 0; padding: 0; 
+        }
+        #msgs li{
+            padding: 0.5rem 1rem;
+            background-color: #9eb0b5
+        }
+        #msgs li:nth-child(odd){
+            background-color: #5b8491;
+        }
+    </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Socket.io Chat</title>
+</head>
+<body>
+    
+    <ul id="msgs">
+        
+    </ul>
+    <form action="" id="form">
+    <input type="text" name="chat" id="chat" placeholder="enter your msg here"><button>Send</button>
+    </form>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        var socket=io()
+        socket.on('connect', ()=>console.log('server connected with socket'))
+        socket.on('disconnect', ()=>console.log('server disconnected'))
+
+        var form=document.getElementById('form')
+        var chat=document.getElementById('chat')
+        var msgs=document.getElementById('msgs')
+
+        form.addEventListener('submit', e=>{
+            e.preventDefault();
+            if(chat.value){
+                socket.emit('chat message', chat.value);
+                console.log('chat value is:', chat.value)
+                chat.value='' //clear the input box
+            }
+        })
+        
+        socket.on('chat message', (msg)=>{
+            console.log('reply from sever: ', msg)
+            var item = document.createElement('li');
+            item.textContent = msg;
+            msgs.appendChild(item);
+        })
+
+
+    </script>
+
+</body>
+</html>
